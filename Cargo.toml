@@ -33,7 +33,7 @@ unnecessary_debug_formatting = "allow"
 
 [dependencies]
 tokio = { version = "1", features = ["full"] }
-reqwest = { version = "0.12", features = ["json", "gzip"] }
+reqwest = { version = "0.12", default-features = false, features = ["json", "gzip", "rustls-tls"] }
 wreq = { version = "6.0.0-rc.27", features = ["cookies", "gzip", "brotli"] }
 wreq-util = "3.0.0-rc.9"
 clap = { version = "4", features = ["derive"] }
