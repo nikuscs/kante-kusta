@@ -1,0 +1,13 @@
+# KuantoKusta CLI Configuration Example
+# Copy to ~/.config/kk/config.toml
+
+# Default output format: table, json, or compact
+format = "table"
+
+# Default maximum results for search/deals
+max_results = 20
+
+# Request settings
+[request]
+# Delay between requests in milliseconds (be nice to the server)
+delay_ms = 100

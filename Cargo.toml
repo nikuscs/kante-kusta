@@ -1,0 +1,60 @@
+[package]
+name = "kuantokusta"
+version = "0.2.0"
+edition = "2021"
+rust-version = "1.75"
+description = "Fast CLI for KuantoKusta.pt price comparison"
+license = "MIT"
+repository = "https://github.com/nikuscs/kuantokusta"
+readme = "README.md"
+keywords = ["kuantokusta", "price", "portugal", "cli", "comparison"]
+categories = ["command-line-utilities"]
+
+[lints.rust]
+unsafe_code = "forbid"
+
+[lints.clippy]
+all = { level = "warn", priority = -1 }
+pedantic = { level = "warn", priority = -1 }
+nursery = { level = "warn", priority = -1 }
+# Pragmatic allowances for CLI apps
+module_name_repetitions = "allow"
+must_use_candidate = "allow"
+missing_errors_doc = "allow"
+missing_panics_doc = "allow"
+needless_pass_by_value = "allow"
+future_not_send = "allow"
+cast_possible_truncation = "allow"
+cast_possible_wrap = "allow"
+cast_sign_loss = "allow"
+format_push_string = "allow"
+return_self_not_must_use = "allow"
+unnecessary_debug_formatting = "allow"
+
+[dependencies]
+tokio = { version = "1", features = ["full"] }
+reqwest = { version = "0.12", default-features = false, features = ["json", "gzip", "rustls-tls"] }
+wreq = { version = "6.0.0-rc.27", features = ["cookies", "gzip", "brotli"] }
+wreq-util = "3.0.0-rc.9"
+clap = { version = "4", features = ["derive"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+anyhow = "1"
+thiserror = "2"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+urlencoding = "2"
+
+[[bin]]
+name = "kk"
+path = "src/main.rs"
+
+[dev-dependencies]
+tokio-test = "0.4"
+tempfile = "3"
+wiremock = "0.6"
+
+[profile.release]
+lto = true
+codegen-units = 1
+strip = true
