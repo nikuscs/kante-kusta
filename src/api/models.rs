@@ -6,6 +6,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Product {
+    #[serde(alias = "productId")]
     pub id: u64,
     pub name: String,
     #[serde(default)]
@@ -14,11 +15,11 @@ pub struct Product {
     pub category: String,
     #[serde(default)]
     pub price_min: f64,
-    #[serde(default)]
+    #[serde(default, alias = "storesLength")]
     pub total_offers: u32,
-    #[serde(default)]
+    #[serde(default, alias = "productUrl")]
     pub url: String,
-    #[serde(default)]
+    #[serde(default, alias = "image", deserialize_with = "deserialize_images")]
     pub images: Vec<String>,
     #[serde(default)]
     pub badges: Badges,
@@ -26,6 +27,66 @@ pub struct Product {
     pub rating: Option<Rating>,
     #[serde(default)]
     pub tags: Tags,
+}
+
+/// Deserialize images from either array or single string
+fn deserialize_images<'de, D>(deserializer: D) -> Result<Vec<String>, D::Error>
+where
+    D: serde::Deserializer<'de>,
+{
+    use serde::de::{self, SeqAccess, Visitor};
+    use std::fmt;
+
+    struct ImagesVisitor;
+
+    impl<'de> Visitor<'de> for ImagesVisitor {
+        type Value = Vec<String>;
+
+        fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+            formatter.write_str("a string or array of strings")
+        }
+
+        fn visit_str<E>(self, value: &str) -> Result<Self::Value, E>
+        where
+            E: de::Error,
+        {
+            Ok(vec![value.to_string()])
+        }
+
+        fn visit_string<E>(self, value: String) -> Result<Self::Value, E>
+        where
+            E: de::Error,
+        {
+            Ok(vec![value])
+        }
+
+        fn visit_seq<A>(self, mut seq: A) -> Result<Self::Value, A::Error>
+        where
+            A: SeqAccess<'de>,
+        {
+            let mut vec = Vec::new();
+            while let Some(value) = seq.next_element()? {
+                vec.push(value);
+            }
+            Ok(vec)
+        }
+
+        fn visit_none<E>(self) -> Result<Self::Value, E>
+        where
+            E: de::Error,
+        {
+            Ok(Vec::new())
+        }
+
+        fn visit_unit<E>(self) -> Result<Self::Value, E>
+        where
+            E: de::Error,
+        {
+            Ok(Vec::new())
+        }
+    }
+
+    deserializer.deserialize_any(ImagesVisitor)
 }
 
 /// Product badges
