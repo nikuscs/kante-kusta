@@ -136,6 +136,11 @@ kk deals --max 100 --format json > deals.json
 - Search scrapes `__NEXT_DATA__` from SSR pages
 - API endpoints used for deals, history, categories, etc.
 
+## Related Projects
+
+- [🕵️ olx-tracker](https://github.com/nikuscs/olx-tracker) - Track OLX.pt listings and get alerts on deals
+- [🦎 amz-crawler](https://github.com/nikuscs/amz-crawler) - Search Amazon with TLS fingerprinting, compare EU prices
+
 ## License
 
 MIT
