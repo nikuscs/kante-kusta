@@ -40,6 +40,11 @@ chmod +x kk
 tar -xzf kk-linux-x64.tar.gz
 chmod +x kk
 ./kk --help
+
+# Linux (ARM64 / Raspberry Pi)
+tar -xzf kk-linux-arm64.tar.gz
+chmod +x kk
+./kk --help
 ```
 
 ### From source
