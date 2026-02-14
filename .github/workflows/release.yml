@@ -127,9 +127,15 @@ jobs:
           - os: macos-latest
             target: aarch64-apple-darwin
             artifact: kk-macos-arm64
+            use_cross: false
           - os: ubuntu-latest
             target: x86_64-unknown-linux-gnu
             artifact: kk-linux-x64
+            use_cross: false
+          - os: ubuntu-latest
+            target: aarch64-unknown-linux-gnu
+            artifact: kk-linux-arm64
+            use_cross: true
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -137,7 +143,7 @@ jobs:
           ref: ${{ needs.create-tag.outputs.tag }}
 
       - name: Install dependencies (Linux)
-        if: runner.os == 'Linux'
+        if: runner.os == 'Linux' && !matrix.use_cross
         run: sudo apt-get update && sudo apt-get install -y libssl-dev pkg-config
 
       - name: Install Rust
@@ -150,8 +156,12 @@ jobs:
         with:
           key: release-${{ matrix.target }}
 
+      - name: Install cross
+        if: matrix.use_cross
+        uses: taiki-e/install-action@cross
+
       - name: Build
-        run: cargo build --release --target ${{ matrix.target }}
+        run: ${{ matrix.use_cross && 'cross' || 'cargo' }} build --release --target ${{ matrix.target }}
 
       - name: Package (Unix)
         run: |
@@ -222,6 +232,7 @@ jobs:
             |----------|------|
             | macOS (Apple Silicon) | `kk-macos-arm64.tar.gz` |
             | Linux (x64) | `kk-linux-x64.tar.gz` |
+            | Linux (ARM64 / Raspberry Pi) | `kk-linux-arm64.tar.gz` |
 
             ### Quick Install
 
