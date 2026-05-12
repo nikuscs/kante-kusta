@@ -1,0 +1,6 @@
+/.github/ @nikuscs
+/Cargo.toml @nikuscs
+/rustfmt.toml @nikuscs
+/config.example.toml @nikuscs
+/src/ @nikuscs
+/tests/ @nikuscs
